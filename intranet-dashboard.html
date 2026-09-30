@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AETHERIUS INTRANET</title>
+<style>
+body{background:#d3d3d3;font:13px Arial,sans-serif;margin:0;color:#000}
+h1{font:bold 20px "Courier New",monospace;background:#808080;color:#fff;margin:0;padding:8px}
+.tabs{padding:10px 12px 0}
+.tabs button{font:bold 13px "Courier New",monospace;padding:6px 14px;border:2px outset #eee;background:#c0c0c0;cursor:pointer}
+.tabs button.on{border-style:inset}
+.pane{display:none;padding:12px}
+.pane.on{display:block}
+table{border:2px solid #000;border-collapse:collapse;width:90%}
+td,th{border:1px solid #000;padding:4px;text-align:left}
+tr:nth-child(3) td{position:relative;left:3px;top:-2px}
+#inbox a{cursor:pointer;color:#00c;text-decoration:underline}
+#msg{border:2px inset #fff;background:#fff;padding:8px;margin-top:10px;font:13px "Courier New",monospace;white-space:pre-wrap;min-height:60px}
+</style>
+</head>
+<body>
+<h1>AETHERIUS RESOURCE MGMT // INTRANET v2.3</h1>
+<img src="img/badge.gif" width="48" height="48">
+<div class="tabs"><button id="b-hr" class="on" onclick="tab('hr')">HR Bulletins</button><button id="b-inbox" onclick="tab('inbox')">Inbox</button></div>
+
+<div id="hr" class="pane on">
+<table>
+<tr><th>DATE</th><th>BULLETIN</th></tr>
+<tr><td>03/02</td><td>Cafeteria hours reduced. Nutrient paste remains unlimited.</td></tr>
+<tr><td>03/09</td><td>Reminder: Sector 4 personnel are reassigned. Do not ask where.</td></tr>
+<tr><td>03/14</td><td>Mandatory synergy training. Attendance is tracked.</td></tr>
+<tr><td>03/21</td><td>Next-of-kin billing portal maintenance window.</td></tr>
+</table>
+</div>
+
+<div id="inbox" class="pane">
+<table>
+<tr><th>FROM</th><th>SUBJECT</th></tr>
+<tr><td>Facilities</td><td><a onclick="mail(0)">Locker reassignments</a></td></tr>
+<tr><td>R. Okonkwo-Reyes</td><td><a onclick="mail(1)">RE: QUARANTINE OVERRIDE</a></td></tr>
+<tr><td>HR</td><td><a onclick="mail(2)">Reminder: complaints are logged</a></td></tr>
+</table>
+<div id="msg">Select a message.</div>
+</div>
+
+<script>
+var K='Aetherius_Clearance';
+if(!sessionStorage.getItem('aeth_auth'))location.replace('legacy-login.html');
+if(localStorage.getItem(K)===null)localStorage.setItem(K,'1');
+var D=new URLSearchParams(location.search).get('dir');
+if(D)location.replace('database.html?dir='+encodeURIComponent(D));
+
+function tab(n){
+  ['hr','inbox'].forEach(function(i){
+    document.getElementById(i).classList.toggle('on',i===n);
+    document.getElementById('b-'+i).classList.toggle('on',i===n);
+  });
+}
+function mail(i){
+  var m=document.getElementById('msg');
+  if(i===1){
+    var c=parseInt(localStorage.getItem(K),10)||0;
+    if(c<3){alert('ERROR: CLEARANCE LEVEL '+c+' DETECTED. LEVEL 3 REQUIRED.');return;}
+    m.textContent='FROM: R. Okonkwo-Reyes\nSUBJECT: RE: QUARANTINE OVERRIDE\n\nAccess the Logistics Black-Site via master directory.\nREQUIRED ROUTING: ?dir=../../admin_config';
+  }else{
+    m.textContent=['Your locker has been reassigned. Please do not contact the previous occupant.','',"Reminder: all complaints are logged. Logged complaints are reviewed. Reviewed complaints are resolved."][i];
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AETHERIUS INTERNAL ACCESS</title>
+<style>
+body{background:#d3d3d3;font:14px "Courier New",monospace;color:#000;margin:40px}
+table{border:3px outset #fff;background:#c0c0c0;margin:0 auto;padding:6px}
+td{padding:8px}
+input[type=text]{font:14px "Courier New",monospace;border:2px inset #fff;width:200px}
+input[type=submit]{font:bold 14px Arial;border:2px outset #fff;background:#c0c0c0;padding:3px 14px}
+h1{font:bold 18px Arial;text-align:center;margin:0}
+</style>
+</head>
+<body>
+<table>
+<tr><td><h1>AETHERIUS RESOURCE MGMT<br>INTERNAL ACCESS TERMINAL</h1></td></tr>
+<tr><td>Authorized personnel only. All attempts are logged.</td></tr>
+<tr><td>
+<form id="f">ENTER PASSCODE:<br><br><input type="text" id="c" autocomplete="off"> <input type="submit" value="ENTER"></form>
+</td></tr>
+</table>
+<script>
+document.getElementById('f').addEventListener('submit',function(e){
+  e.preventDefault();
+  if(document.getElementById('c').value.trim()==='Acheron-09'){
+    sessionStorage.setItem('aeth_auth','1');
+    localStorage.setItem('Aetherius_Clearance','1');
+    location.href='intranet-dashboard.html';
+  }else{
+    alert('ACCESS DENIED. ATTEMPT LOGGED.');
+  }
+});
+</script>
+</body>
+</html>

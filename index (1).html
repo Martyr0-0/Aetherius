@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QUARANTINE VESSEL // CONSOLE</title>
+<style>
+:root{--fg:#9be7c4}
+body{margin:0;background:#050807;color:var(--fg);font:16px/1.5 "Courier New",monospace;padding:24px;min-height:100vh}
+body.red{--fg:#ff2222}
+#out div{white-space:pre-wrap;margin:2px 0}
+#choices button{display:block;margin:8px 0;padding:6px 12px;font:inherit;color:var(--fg);background:none;border:1px solid var(--fg);cursor:pointer;text-align:left}
+#choices button:hover,#choices button:focus{background:var(--fg);color:#000;outline:none}
+#f{display:flex;gap:8px;margin-top:10px}
+#i{flex:1;background:none;border:0;border-bottom:1px solid var(--fg);color:var(--fg);font:inherit;outline:none}
+[hidden]{display:none!important}
+body.flash,body.flash *{background:#fff!important;color:#fff!important;border-color:#fff!important}
+</style>
+</head>
+<body>
+<div id="out"></div>
+<div id="choices" hidden></div>
+<form id="f" hidden><span>&gt;</span><input id="i" autocomplete="off" spellcheck="false"></form>
+
+<script>
+let currentState='START';
+let wifeLoreFound=false;
+
+/* Lines are auto-prefixed with "> ". A number = pause in ms. l=lines, g=gap ms between lines, s=typing ms per char,
+   ch=[label,next] choices, code+next = input mode, end = callback when lines finish. */
+const S={
+/* STAND-INS for the nodes from your earlier message: replace the text, keep the ids. */
+START:{l:['CONNECTION ESTABLISHED.','ELLIS: Hello? Is anyone there?'],ch:[['Who is this?','IDENTIFY']]},
+IDENTIFY:{l:['ELLIS: Ellis. Aetherius maintenance. I am sealed in a quarantine vessel.'],ch:[['Who is Aetherius?','CORPORATE']]},
+CORPORATE:{l:['ELLIS: A mining company. They call it sustainable extraction.'],ch:[['What is your status?','STATUS']]},
+STATUS:{l:['ELLIS: Air is thin. Power is worse. The hull is failing.'],ch:[['What is out there?','HORROR']]},
+HORROR:{l:['ELLIS: I do not know. It scratches at the hull.'],ch:[['What do you need?','OVERRIDES']]},
+OVERRIDES:{l:['ELLIS: Override codes. Start with the corporate website. Read its source.'],ch:[['Understood.','INPUT_MODE_1']]},
+INPUT_MODE_1:{l:['AWAITING CREDENTIAL...'],code:'ACHERON-09',next:'CRED_OK'},
+
+CRED_OK:{g:1000,l:['CREDENTIAL ACCEPTED. INTERNAL DIRECTORY LOCATED.','ELLIS: You got it! Okay, they use a legacy intranet hub. Go to: /legacy-login.html','ELLIS: You need to get into my department Inbox and find the routing code for the Black-Site database.'],
+  ch:[["I'm going in.",'INPUT_MODE_2'],['What if they trace me?','TRACE_FEAR']]},
+TRACE_FEAR:{l:["ELLIS: They won't trace you yet. You're just a ghost in their legacy system.",'ELLIS: Just hurry. The hull is groaning. Whatever is out there is getting bigger.'],ch:[['Understood.','INPUT_MODE_2']]},
+INPUT_MODE_2:{l:['AWAITING BLACK-SITE ROUTING CODE...'],code:'DEEP_SCRAPE',next:'DB_OK'},
+DB_OK:{g:1000,l:['OVERRIDING... LOGISTICS DATABASE UNLOCKED.','ACCESS PATH: /database.html',"ELLIS: You found the Black-Site. God... it's a graveyard in there, isn't it?",'ELLIS: They documented everything. They watched us die like lab rats.','ELLIS: Find the manual quarantine override file. I need the final protocol code.'],
+  ch:[['I will find the override.','INPUT_MODE_3']]},
+INPUT_MODE_3:{l:['AWAITING QUARANTINE OVERRIDE PROTOCOL...'],code:'PROTOCOL_ECLIPSE',next:'ALARM'},
+
+ALARM:{red:1,g:500,s:12,l:['TRACING UNAUTHORIZED CONNECTION... IP LOGGED.','SCRUBBER AI: YOU ARE ACCESSING QUARANTINED DATA.','ELLIS: No, no, no! The Scrubber AI woke up! It sees you!',"ELLIS: It's locking out my console! It's venting the airlock!"],
+  ch:[['What do I do?!','FINAL_STAND'],["I'm shutting the connection down.",'COWARD']]},
+COWARD:{l:["ELLIS: NO! Please don't leave me in the d\u2014",'[CONNECTION SEVERED BY HOST]'],end:()=>setTimeout(()=>location.reload(),1500)},
+FINAL_STAND:{l:['ELLIS: There\'s one command left. EXECUTE_DUMP.','ELLIS: It bypasses the AI, dumps all their classified files to the public internet, and unseals my blast doors.','ELLIS: It will kill me. But it will destroy the company.','ELLIS: Type it. Do it now.'],ch:[['...','FINAL_INPUT_MODE']]},
+FINAL_INPUT_MODE:{l:['AWAITING FINAL COMMAND...'],code:'EXECUTE_DUMP',next:()=>wifeLoreFound?'END_GOOD':'END_BAD'},
+
+/* Endings: no choices, no input = permanently locked. */
+END_BAD:{g:500,s:12,l:['OVERRIDE ACCEPTED. MAIN HULL UNSEALED.','UPLOADING ARCHIVE TO PUBLIC SERVERS...','ALERT: EXTERIOR AIRLOCK BREACH. INTERNAL BULKHEAD BREACH.','BIOMETRICS: EXTREME TACHYCARDIA.','AUDIO: [UNKNOWN FREQUENCY / HIGH DECIBEL SHOCK]','BIOMETRICS: MASSIVE HEMORRHAGING. MULTIPLE COMPOUND FRACTURES.','BIOMETRICS: CARDIAC ARREST.','SYSTEM ERROR: BIOMASS CONTAMINATION ON CAMERA LENSES.','ARCHIVE UPLOAD COMPLETE.','RUN.']},
+END_GOOD:{g:2500,l:['OVERRIDE ACCEPTED. ARCHIVE UPLOADING...','SCRUBBER AI: WARNING. UNAUTHORIZED THRUSTER IGNITION DETECTED ON QUARANTINE VESSEL.','ELLIS: You thought I was just going to sit here in the dark.',"ELLIS: I read the files. I'm not dying on a spreadsheet.",'SCRUBBER AI: ALERT. VESSEL TRAJECTORY ALTERED. TARGETING AETHERIUS ORBITAL COMMAND.','SCRUBBER AI: COLLISION IMMINENT.','ELLIS: Look out your window.',4000,'SYSTEM ALERT TO CURRENT USER: You see a ship outside.'],
+  end:()=>setTimeout(()=>document.body.classList.add('flash'),1200)}
+};
+const EXPLODE=['EXECUTING COMMAND... FATAL ERROR: CONTAINMENT FAILURE.','ELLIS HAS SPONTANEOUSLY COMBUSTED.','WELL, THAT WAS ANTI-CLIMACTIC.'];
+const SARAH=['DEPENDENT ARCHIVE UNLOCKED. TARGET: SARAH.','ELLIS: ...Where did you find that name?','ELLIS: You accessed my dependent file? They told me her payout was secured. They told me she was safe.','ELLIS: They canceled it? They let her think I just abandoned her?','ELLIS: ...Okay. Okay.','THRUSTER MANUAL OVERRIDE ENGAGED.'];
+
+const out=document.getElementById('out'),box=document.getElementById('choices'),form=document.getElementById('f'),inp=document.getElementById('i');
+let run=0; /* bumping run cancels any queue still ticking */
+
+function mode(m){box.hidden=m!=='choices';form.hidden=m!=='input';box.innerHTML=m==='choices'?box.innerHTML:'';}
+function print(t){const d=document.createElement('div');d.textContent=t;out.appendChild(d);scrollTo(0,document.body.scrollHeight);return d;}
+
+/* The async queue: types each line char by char, waits `gap`, then moves on. Strings are lines, numbers are pauses. */
+function play(lines,gap,spd,done){
+  const id=++run;let i=0;
+  (function next(){
+    if(id!==run)return;
+    if(i>=lines.length){if(done)done();return;}
+    const L=lines[i++];
+    if(typeof L==='number'){setTimeout(next,L);return;}
+    const d=print(''),t='> '+L;let c=0;
+    (function ch(){
+      if(id!==run)return;
+      d.textContent=t.slice(0,++c);scrollTo(0,document.body.scrollHeight);
+      if(c<t.length)setTimeout(ch,spd);else setTimeout(next,gap);
+    })();
+  })();
+}
+
+function go(name){
+  currentState=name;const s=S[name];
+  mode('none');
+  if(s.red)document.body.classList.add('red');
+  play(s.l,s.g||1000,s.s||22,()=>{
+    if(s.ch){
+      s.ch.forEach(c=>{const b=document.createElement('button');b.textContent='[ '+c[0]+' ]';b.onclick=()=>{print('> '+c[0]);go(c[1]);};box.appendChild(b);});
+      box.hidden=false;form.hidden=true;box.firstChild.focus();
+    }else if(s.code){mode('input');inp.focus();}
+    else if(s.end)s.end();
+  });
+}
+
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const v=inp.value.trim();inp.value='';if(!v)return;
+  print('> '+v);
+  const s=S[currentState],u=v.toUpperCase();
+  if(v.toLowerCase()==='explosion.true()'){mode('none');play(EXPLODE,1000,22);return;} /* global: permanent lock */
+  if(u==='SARAH_84'){ /* global: returns to the current input mode */
+    mode('none');
+    if(wifeLoreFound){print('> DEPENDENT ARCHIVE ALREADY UNLOCKED.');print('> '+s.l[0]);mode('input');inp.focus();return;}
+    wifeLoreFound=true;
+    play(SARAH,1000,22,()=>{print('> '+s.l[0]);mode('input');inp.focus();});
+    return;
+  }
+  if(u===s.code){go(typeof s.next==='function'?s.next():s.next);return;}
+  print('> INVALID CODE.');
+});
+
+go('START');
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+:root{--ink:#14213d;--acc:#00796b;--mute:#5b6478;--line:#e6e9ef}
+*{box-sizing:border-box;margin:0}
+body{font:17px/1.65 "Helvetica Neue",Arial,sans-serif;color:var(--ink);background:#fff}
+nav{display:flex;justify-content:space-between;align-items:center;padding:22px 8%;border-bottom:1px solid var(--line)}
+nav b{font:700 1.15rem Georgia,serif;letter-spacing:.02em}
+nav a{margin-left:28px;color:var(--ink);text-decoration:none;background:linear-gradient(var(--acc),var(--acc)) 0 100%/0 2px no-repeat;transition:background-size .3s,color .3s}
+nav a:hover{background-size:100% 2px;color:var(--acc)}
+.hero{padding:130px 8% 110px}
+.hero h1{font:400 clamp(2.4rem,6vw,4.4rem)/1.05 Georgia,serif;max-width:15ch}
+.hero p{margin-top:26px;max-width:54ch;color:var(--mute);font-size:1.15rem}
+section{padding:70px 8%;border-top:1px solid var(--line)}
+h2{font:400 1.9rem Georgia,serif;margin-bottom:28px}
+.row{display:grid;grid-template-columns:220px 1fr;gap:28px;padding:26px 12px;border-bottom:1px solid var(--line);transition:background .3s,padding-left .3s}
+.row:hover{background:#f4faf9;padding-left:24px}
+.row h3{font:700 1.05rem Georgia,serif}
+.row small{display:block;color:var(--acc);font-size:.85rem}
+.row p{color:var(--mute);max-width:62ch}
+footer{padding:36px 8%;color:#9aa1b1;font-size:.85rem;border-top:1px solid var(--line)}
+@media(max-width:700px){.row{grid-template-columns:1fr;gap:6px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}

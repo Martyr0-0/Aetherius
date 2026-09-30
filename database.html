@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Index of /admin_config</title>
+<style>
+body{background:#000;color:#ffb000;font:15px/1.45 "Courier New",monospace;padding:24px;animation:fl 6s infinite}
+h1{color:#ff2a2a;font-size:24px;text-shadow:2px 0 #f0f,-2px 0 #0ff;animation:gl 1.2s infinite steps(2)}
+hr{border:0;height:12px;background:#ff2a2a;clip-path:polygon(0 40%,6% 0,13% 90%,24% 10%,38% 100%,52% 20%,66% 85%,78% 0,90% 70%,100% 30%,100% 100%,0 100%)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:2px 14px 2px 0}
+a{color:#ffb000;cursor:pointer;text-decoration:underline}
+a:hover{color:#ff2a2a;animation:gl .3s infinite steps(2)}
+#fn{color:#ff2a2a;margin:22px 0 6px}
+pre{white-space:pre-wrap;border:3px solid #ff2a2a;padding:14px;min-height:50px;margin:0}
+address{margin-top:18px;color:#a06000}
+.ban{position:fixed;background:#c00;color:#fff;font:bold 20px Arial;padding:14px 18px;border:4px solid #fff;z-index:9;animation:gl .2s infinite}
+body.x table{transform:rotate(-5deg) skew(8deg)}
+body.x pre{transform:rotate(3deg) translateX(30px)}
+body.x h1{transform:scale(1.6) translateY(40px) rotate(4deg)}
+body.x address{position:absolute;top:8px;right:-40px;transform:rotate(90deg)}
+@keyframes gl{0%{transform:translate(0)}25%{transform:translate(-3px,1px)}50%{transform:translate(2px,-2px)}75%{transform:translate(-1px,2px)}}
+@keyframes fl{0%,93%,100%{opacity:1}95%{opacity:.55}97%{opacity:.9}}
+</style>
+</head>
+<body>
+<h1>Index of /admin_config</h1>
+<hr>
+<table>
+<thead><tr><th>Name</th><th>Last modified</th><th>Size</th></tr></thead>
+<tbody></tbody>
+</table>
+<hr>
+<h3 id="fn"></h3>
+<pre id="out">Select a file.</pre>
+<address>Apache/2.4.41 (Ubuntu) Server at logistics-blacksite.aetherius.int Port 80</address>
+<div style="color:#000; cursor:default; user-select:text;">PROTOCOL_ECLIPSE</div>
+<script>
+if(new URLSearchParams(location.search).get('dir')!=='../../admin_config')location.replace('legacy-login.html');
+var FILES={
+'incident_44A_calcification.txt':`TARGET: Deep-bore miner crew, Sector 4.
+EVENT: Drill team ruptured an undocumented subterranean egg sac. Parasitic ingress occurred via the respiratory tract of all six miners.
+SYMPTOMS: Immediate and rapid calcification of internal organs. Audio telemetry recorded the sound of the workers' ribcages forcefully expanding and cracking outward to accommodate the gestating alien biomass. Subjects vomited blackened, coagulated blood mixed with lung tissue as the parasite repurposed their digestive tracts into incubation tubes.
+NOTE: Subjects remained entirely conscious and highly vocal during 80% of the biological conversion process.
+[FATAL SYSTEM OVERFLOW: CACHE DUMP = DEEP_SCRAPE]
+RESOLUTION: Extraction denied. Sector incinerated. Next-of-kin billed for the cost of thermal fuel.`,
+'incident_89G_acoustic.txt':`TARGET: Maintenance Crew 7, Lower Mineshaft.
+EVENT: Acoustic resonance anomaly breached hull integrity.
+SYMPTOMS: The sound frequencies triggered immediate, violent psychosis and extreme auto-cannibalism. Security feeds show Foreman Miller utilizing an industrial plasma-cutter to sever his own optical nerves, screaming that "the colors were deafening." The remaining crew used chemical sealants to fuse their own biological matter together, creating a pulsing, multi-limbed mass of flesh and exposed bone that continued to attempt to operate the mining machinery.
+RESOLUTION: Airlock sealed. Mass designated as biological waste hazard. Do not clean.`,
+'incident_12O_hypoxia_test.txt':`TARGET: Atmospheric Engineering Team.
+EVENT: Not an accident. Sanctioned corporate test to observe the effects of prolonged hypoxia combined with Sector 9 alien spore exposure.
+SYMPTOMS: As oxygen was drained, the spores bonded with the workers' deteriorating lung tissue, dissolving it into a neuro-conductive jelly. Subjects bled viscous black fluid from their tear ducts and pores. Their skin sloughed off in massive sheets when they attempted to claw at the sealed blast doors, exposing raw, mutating musculature beneath. They begged for death in perfect, terrifying unison.
+RESOLUTION: Request for euthanasia denied by Scrubber AI. The telemetric data was deemed too valuable to interrupt.`
+};
+var seen={},count=0,locked=false,tb=document.querySelector('tbody');
+Object.keys(FILES).forEach(function(n,i){
+ var tr=document.createElement('tr'),a=document.createElement('a');
+ a.textContent=n;
+ a.onclick=function(){
+   document.getElementById('fn').textContent=n;
+   document.getElementById('out').textContent=FILES[n];
+   if(!seen[n]){seen[n]=1;count++;}
+   if(count===3&&!locked){locked=true;setTimeout(lockdown,4000);}
+ };
+ var t1=document.createElement('td');t1.appendChild(a);
+ tr.appendChild(t1);
+ ['2041-0'+(i+3)+'-1'+i+' 03:1'+i,(2+i)+'.'+(i*3+1)+'K'].forEach(function(v){var td=document.createElement('td');td.textContent=v;tr.appendChild(td);});
+ tb.appendChild(tr);
+});
+/* PHASE 4: THE SCRUBBER AI */
+var ELLIS={"target":"Ellis","status":"Expendable","dependent_payout":"Canceled","dependent_name":"SARAH","dependent_authorization_code":"SARAH_84","note":"Do not inform target of dependent status. Let him starve."};
+function lockdown(){
+ document.body.classList.add('x');
+ var MSG=['ILLEGAL ACCESS LOGGED','RECOVERY TEAMS DISPATCHED TO YOUR IP'];
+ setInterval(function(){
+   var b=document.createElement('div');
+   b.className='ban';
+   b.textContent=MSG[Math.floor(Math.random()*2)];
+   b.style.top=Math.random()*90+'%';
+   b.style.left=Math.random()*65+'%';
+   b.style.transform='rotate('+(Math.random()*24-12)+'deg)';
+   document.body.appendChild(b);
+   var all=document.querySelectorAll('.ban');
+   if(all.length>40)all[0].remove();
+ },600);
+ var EP=[
+   ['/api/terminate_user',ELLIS],
+   ['/api/scrub_logs',{"action":"scrub_logs","status":"pending"}],
+   ['/api/locate_host',{"action":"locate_host","status":"pending"}]
+ ],k=0;
+ setInterval(function(){
+   var e=EP[k++%EP.length];
+   fetch(e[0],{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(e[1])}).catch(function(){});
+ },1500);
+}
+</script>
+</body>
+</html>
