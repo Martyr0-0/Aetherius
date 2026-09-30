@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About | Aetherius Resource Management</title>
+<link rel="stylesheet" href="facade.css">
+<style>
+article{max-width:68ch;margin:0 auto;padding:70px 8% 90px}
+article p{margin-bottom:22px;color:#3b4459}
+article h2{margin:44px 0 16px}
+.lead{font:400 1.35rem/1.5 Georgia,serif;color:var(--ink)}
+
+#pull{position:fixed;top:42%;right:0;width:270px;padding:22px 20px;background:#000;color:#ffb000;font:14px/1.5 "Courier New",monospace;border:2px solid #ff2a2a;border-right:0;transform:translateX(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:20}
+#pull.open{transform:none}
+#tab{position:absolute;left:-22px;top:0;width:22px;height:84px;padding:0;border:0;background:#e6e9ef;opacity:.55;cursor:pointer;transition:opacity .2s}
+#tab:hover,#tab:focus-visible{opacity:1}
+#tab::before{content:"";position:absolute;left:8px;top:34px;width:6px;height:16px;border-left:2px solid #14213d;border-right:2px solid #14213d}
+#pull b{color:#ff2a2a;letter-spacing:.08em}
+#pull p{margin:10px 0 14px;color:#a06000}
+.gl{position:relative;display:inline-block;color:#ffb000;font-weight:700;text-decoration:none;letter-spacing:.04em;animation:jit .3s infinite steps(2)}
+.gl::before,.gl::after{content:attr(data-t);position:absolute;left:0;top:0}
+.gl::before{color:#ff2a2a;clip-path:inset(0 0 55% 0);transform:translateX(-3px)}
+.gl::after{color:#0ff;clip-path:inset(50% 0 0 0);transform:translateX(3px)}
+
+body.g main{animation:jit .18s infinite steps(2);filter:drop-shadow(4px 0 #f0f) drop-shadow(-4px 0 #0ff)}
+body.g nav,body.g footer{animation:jit .22s infinite steps(2) reverse}
+body.g::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:15;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 2px,transparent 2px 4px);animation:roll .6s infinite steps(4)}
+@keyframes jit{0%{transform:translate(0)}25%{transform:translate(-5px,2px) skewX(1deg)}50%{transform:translate(4px,-2px)}75%{transform:translate(-3px,1px) skewX(-2deg);filter:hue-rotate(90deg) invert(.12)}}
+@keyframes roll{to{background-position:0 8px}}
+@media(prefers-reduced-motion:reduce){body.g main,body.g nav,body.g footer,body.g::after,.gl{animation:none}}
+</style>
+</head>
+<body>
+<nav><b>Aetherius Resource Management</b><div><a href="index.html">Mission</a><a href="about.html">About</a><a href="leadership.html">Leadership</a></div></nav>
+
+<main>
+<header class="hero"><h1>A company built at the edge of the possible.</h1></header>
+
+<article>
+<p class="lead">Aetherius Resource Management finds, extracts, and delivers the raw materials that keep human civilization moving, from places most companies would never dare to reach.</p>
+
+<p>Founded on the belief that the next century's prosperity lies beyond our own atmosphere, Aetherius operates a network of off-world mining and processing sectors. Our work spans deep-bore extraction, lower-shaft maintenance, atmospheric engineering, and the logistics that bind them into a single, seamless supply chain.</p>
+
+<h2>What we do</h2>
+<p>Each of our divisions plays a specific role. Extraction crews recover ore and volatile compounds from deep beneath the surface. Maintenance teams keep shafts, hulls, and machinery in working order. Atmospheric engineers make hostile environments livable long enough to work in them. Logistics coordinates the rest, moving material and personnel wherever the schedule demands.</p>
+
+<h2>How we work</h2>
+<p>Aetherius is built on automation. Our Scrubber platform monitors operations around the clock, flagging delays and resolving incidents so that human teams can focus on output. Every sector reports continuous telemetry, and every decision is measured against a single question: does it keep the work moving?</p>
+
+<h2>Our people</h2>
+<p>Thousands of specialists work across our sectors. We recruit for resilience, train for compliance, and reward those who stay the course. Aetherius invests in its workforce because a well-managed team is a productive one, and a productive team is the foundation of everything we deliver.</p>
+
+<p>We are proud of what we have built, and we are only getting started.</p>
+</article>
+</main>
+
+<footer>&copy; Aetherius Resource Management. All sectors reserved.</footer>
+
+<aside id="pull">
+  <button id="tab" aria-label="Toggle side panel" aria-expanded="false"></button>
+  <b>&#9608; SIGNAL UNSTABLE &#9608;</b>
+  <p>...someone is still on the line.</p>
+  <a class="gl" id="lnk" tabindex="-1" href="terminal/index.html" data-t="terminal/index.html">terminal/index.html</a>
+</aside>
+
+<script>
+var p=document.getElementById('pull'),t=document.getElementById('tab');
+function set(o){
+  p.classList.toggle('open',o);
+  document.body.classList.toggle('g',o);
+  document.getElementById('lnk').tabIndex=o?0:-1;
+  t.setAttribute('aria-expanded',o);
+}
+t.onclick=function(){set(!p.classList.contains('open'));};
+addEventListener('keydown',function(e){if(e.key==='Escape')set(false);});
+</script>
+</body>
+</html>
